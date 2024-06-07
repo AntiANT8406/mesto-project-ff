@@ -25,7 +25,7 @@ const initialCards = [
     }
 ];
 
-export const renderInitCards = (cardTemplate, placesElement, createCard, deleteFunction) => {
+export function renderInitCards(cardTemplate, placesElement, createCard, deleteFunction) {
     for (const cardItems of initialCards) {
         const card = createCard(cardItems, cardTemplate, deleteFunction);
         placesElement.append(card);

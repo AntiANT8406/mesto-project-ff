@@ -1,10 +1,8 @@
-export const deleteCard = (evt) => {
-    const eventTarget = evt.target;
-    const currentCard = eventTarget.closest('.card');
-    currentCard.remove();
+export function deleteCard(card) {
+    card.remove();
 }
 
-export const createCard = (cardItems, cardTemplate, deleteFunction) => {
+export function createCard(cardItems, cardTemplate, deleteFunction) {
     const currentCard = cardTemplate.cloneNode(true);
     const cardImage = currentCard.querySelector('.card__image');
     cardImage.src = cardItems.link;
