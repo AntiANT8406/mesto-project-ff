@@ -1,7 +1,7 @@
 import './pages/index.css';
 import {renderInitCards} from './scripts/cards.js';
 import {createCard, deleteCard} from "./scripts/card";
-import {openPopup} from "./scripts/modal";
+import {fillProfilePopup, openPopup} from "./scripts/popup";
 
 const cardTemplate = document.querySelector("#card-template").content;
 const placesElement = document.querySelector('.places__list');
@@ -19,6 +19,10 @@ const mainPage = document.querySelector('.content');
 mainPage.addEventListener('click', function profileClickHandler(event) {
     const target = event.target;
     if (target.classList.contains('profile__edit-button')) {
+        const profile = target.closest('.profile');
+        const profileName = profile.querySelector('.profile__title').textContent;
+        const profileDescription = profile.querySelector('.profile__description').textContent;
+        fillProfilePopup(profileName, profileDescription);
         openPopup(popupProfile);
     }
 })

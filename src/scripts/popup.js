@@ -22,3 +22,9 @@ function closePopupWithEscape(event) {
         document.removeEventListener('keydown', closePopupWithEscape);
     }
 }
+
+export function fillProfilePopup(name, description) {
+    const form = document.forms['edit-profile'];
+    form.name.value = name;
+    form.description.value = description;
+}
