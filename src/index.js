@@ -8,7 +8,7 @@ const mainPage = document.querySelector('.content');
 const profileElement = mainPage.querySelector('.profile');
 const placesElement = mainPage.querySelector('.places__list');
 
-renderInitCards(cardTemplate, placesElement, createCard, deleteCard, likeCard,zoomCard);
+renderInitCards(cardTemplate, placesElement, createCard, deleteCard, likeCard, zoomCard);
 
 profileElement.addEventListener('click', (event) => {
     const target = event.target;

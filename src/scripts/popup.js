@@ -50,7 +50,7 @@ export function editProfile(profileElement) {
 export function addCard(placesElement, cardTemplate) {
     const popupNewCardElement = document.querySelector('.popup_type_new-card');
     openPopup(popupNewCardElement);
-    popupNewCardElement.addEventListener('submit', function submitCard(event)  {
+    popupNewCardElement.addEventListener('submit', function submitCard(event) {
         event.preventDefault();
         const formCreate = document.forms['new-place'];
         const card = createCard(
