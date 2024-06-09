@@ -25,9 +25,9 @@ const initialCards = [
     }
 ];
 
-export function renderInitCards(cardTemplate, placesElement, createCard, deleteFunction) {
+export function renderInitCards(cardTemplate, placesElement, createCard, deleteFunction, likeFunction, zoomFunction) {
     for (const cardItems of initialCards) {
-        const card = createCard(cardItems, cardTemplate, deleteFunction);
+        const card = createCard(cardItems.name, cardItems.link, cardTemplate, deleteFunction, likeFunction, zoomFunction);
         placesElement.append(card);
     }
 }

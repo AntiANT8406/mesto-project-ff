@@ -1,28 +1,20 @@
 import './pages/index.css';
 import {renderInitCards} from './scripts/cards.js';
-import {createCard, deleteCard} from "./scripts/card";
-import {fillProfilePopup, openPopup} from "./scripts/popup";
+import {createCard, deleteCard, likeCard, zoomCard} from "./scripts/card";
+import {addCard, editProfile} from "./scripts/popup";
 
 const cardTemplate = document.querySelector("#card-template").content;
-const placesElement = document.querySelector('.places__list');
-placesElement.addEventListener('click', function cardClickHandler(event) {
-    const target = event.target;
-    if (target.classList.contains('card__delete-button')) {
-        deleteCard(target.closest('.card'));
-    }
-})
-
-renderInitCards(cardTemplate, placesElement, createCard, deleteCard);
-
-const popupProfile = document.querySelector('.popup_type_edit');
 const mainPage = document.querySelector('.content');
-mainPage.addEventListener('click', function profileClickHandler(event) {
+const profileElement = mainPage.querySelector('.profile');
+const placesElement = mainPage.querySelector('.places__list');
+
+renderInitCards(cardTemplate, placesElement, createCard, deleteCard, likeCard,zoomCard);
+
+profileElement.addEventListener('click', (event) => {
     const target = event.target;
     if (target.classList.contains('profile__edit-button')) {
-        const profile = target.closest('.profile');
-        const profileName = profile.querySelector('.profile__title').textContent;
-        const profileDescription = profile.querySelector('.profile__description').textContent;
-        fillProfilePopup(profileName, profileDescription);
-        openPopup(popupProfile);
+        editProfile(profileElement)
+    } else if (target.classList.contains('profile__add-button')) {
+        addCard(placesElement, cardTemplate)
     }
 })
