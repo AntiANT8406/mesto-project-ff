@@ -1,8 +1,11 @@
 import {createCard, deleteCard, likeCard, zoomCard} from "./card";
 
-export function openPopup(popupElement) {
-    popupElement.classList.add('popup_is-opened');
-    addListenersToPopup(popupElement);
+export function openModal(modalElement) {
+    modalElement.classList.add('popup_is-opened');
+}
+
+function closeModal(modalElement) {
+    modalElement.classList.remove('popup_is-opened');
 }
 
 function closePopupWithClick(event) {
@@ -37,7 +40,7 @@ export function editProfile(profileElement) {
     const profileNameElement = profileElement.querySelector('.profile__title');
     const profileDescriptionElement = profileElement.querySelector('.profile__description');
     fillProfilePopup(profileNameElement, profileDescriptionElement);
-    openPopup(popupProfileElement);
+    openModal(popupProfileElement);
     popupProfileElement.addEventListener('submit', function submitProfile(event) {
         event.preventDefault();
         handleProfilePopupSubmit(profileNameElement, profileDescriptionElement);
@@ -49,7 +52,7 @@ export function editProfile(profileElement) {
 
 export function addCard(placesElement, cardTemplate) {
     const popupNewCardElement = document.querySelector('.popup_type_new-card');
-    openPopup(popupNewCardElement);
+    openModal(popupNewCardElement);
     popupNewCardElement.addEventListener('submit', function submitCard(event) {
         event.preventDefault();
         const formCreate = document.forms['new-place'];

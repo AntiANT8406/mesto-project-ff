@@ -1,4 +1,4 @@
-const initialCards = [
+export const initialCards = [
     {
         name: "Архыз",
         link: "https://pictures.s3.yandex.net/frontend-developer/cards-compressed/arkhyz.jpg",
@@ -24,10 +24,3 @@ const initialCards = [
         link: "https://pictures.s3.yandex.net/frontend-developer/cards-compressed/baikal.jpg",
     }
 ];
-
-export function renderInitCards(cardTemplate, placesElement, createCard, deleteFunction, likeFunction, zoomFunction) {
-    for (const cardItems of initialCards) {
-        const card = createCard(cardItems.name, cardItems.link, cardTemplate, deleteFunction, likeFunction, zoomFunction);
-        placesElement.append(card);
-    }
-}

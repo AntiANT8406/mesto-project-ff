@@ -1,4 +1,4 @@
-import {openPopup} from "./popup";
+import {openModal} from "./modal";
 
 export function deleteCard(event) {
     const card = event.target.closest('.card');
@@ -17,7 +17,7 @@ export function zoomCard(event) {
     const imageElement = popupImageElement.querySelector('.popup__image')
     imageElement.src = imageLink;
     popupImageElement.querySelector('.popup__caption').textContent = imageCaption;
-    openPopup(popupImageElement);
+    openModal(popupImageElement);
 }
 
 export function createCard(name, link, cardTemplate, deleteFunction, likeFunction, zoomFunction) {
