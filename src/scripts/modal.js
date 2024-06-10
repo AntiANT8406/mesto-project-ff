@@ -1,85 +1,24 @@
-import {createCard, deleteCard, likeCard, zoomCard} from "./card";
-
 export function openModal(modalElement) {
-    modalElement.classList.add('popup_is-opened');
+  modalElement.classList.add("popup_is-opened");
 }
 
-function closeModal(modalElement) {
-    modalElement.classList.remove('popup_is-opened');
+export function closeModal(modalElement) {
+  modalElement.classList.remove("popup_is-opened");
 }
 
-function closePopupWithClick(event) {
-    const target = event.target;
-    const popupElement = event.currentTarget;
-    if (target.classList.contains('popup__close') || target === popupElement) {
-        popupElement.classList.remove('popup_is-opened');
-        removeListenersFromPopup(popupElement);
-    }
+export function closeModalWithClick(evt) {
+  closeModal(evt.target.closest(".popup"));
 }
 
-function closePopupWithEscape(event) {
-    if (event.key === 'Escape') {
-        const popupElement = document.querySelector('.popup_is-opened')
-        popupElement.classList.remove('popup_is-opened');
-        removeListenersFromPopup(popupElement);
-    }
+export function closeModalWithOverlayClick(evt) {
+  if (evt.target === evt.currentTarget) {
+    closeModal(evt.target.closest(".popup"));
+  }
 }
 
-function addListenersToPopup(popupElement) {
-    popupElement.addEventListener('click', closePopupWithClick);
-    document.addEventListener('keydown', closePopupWithEscape);
-}
-
-function removeListenersFromPopup(popupElement) {
-    popupElement.removeEventListener('click', closePopupWithClick);
-    document.removeEventListener('keydown', closePopupWithEscape);
-}
-
-export function editProfile(profileElement) {
-    const popupProfileElement = document.querySelector('.popup_type_edit');
-    const profileNameElement = profileElement.querySelector('.profile__title');
-    const profileDescriptionElement = profileElement.querySelector('.profile__description');
-    fillProfilePopup(profileNameElement, profileDescriptionElement);
-    openModal(popupProfileElement);
-    popupProfileElement.addEventListener('submit', function submitProfile(event) {
-        event.preventDefault();
-        handleProfilePopupSubmit(profileNameElement, profileDescriptionElement);
-        popupProfileElement.classList.remove('popup_is-opened');
-        removeListenersFromPopup(popupProfileElement);
-        popupProfileElement.removeEventListener('submit', submitProfile)
-    });
-}
-
-export function addCard(placesElement, cardTemplate) {
-    const popupNewCardElement = document.querySelector('.popup_type_new-card');
-    openModal(popupNewCardElement);
-    popupNewCardElement.addEventListener('submit', function submitCard(event) {
-        event.preventDefault();
-        const formCreate = document.forms['new-place'];
-        const card = createCard(
-            formCreate['place-name'].value,
-            formCreate['link'].value,
-            cardTemplate,
-            deleteCard,
-            likeCard,
-            zoomCard
-        );
-        placesElement.prepend(card);
-        popupNewCardElement.classList.remove('popup_is-opened');
-        formCreate.reset();
-        removeListenersFromPopup(popupNewCardElement);
-        popupNewCardElement.removeEventListener('submit', submitCard);
-    })
-}
-
-function fillProfilePopup(nameElement, descriptionElement) {
-    const form = document.forms['edit-profile'];
-    form.name.value = nameElement.textContent;
-    form.description.value = descriptionElement.textContent;
-}
-
-function handleProfilePopupSubmit(profileNameElement, profileDescriptionElement) {
-    const form = document.forms['edit-profile'];
-    profileNameElement.textContent = form.name.value;
-    profileDescriptionElement.textContent = form.description.value;
+export function closeModalWithEsc(evt) {
+  const elementOpened = document.querySelector(".popup_is-opened");
+  if (evt.key === "Escape" && elementOpened) {
+    closeModal(elementOpened);
+  }
 }
