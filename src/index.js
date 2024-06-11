@@ -33,7 +33,7 @@ function zoomCard(name, link) {
   openModal(cardZoomModal);
 }
 
-for (let cardItems of initialCards) {
+initialCards.forEach((cardItems) => {
   const card = createCard(
     cardItems,
     cardTemplate,
@@ -42,15 +42,15 @@ for (let cardItems of initialCards) {
     zoomCard
   );
   placesElement.append(card);
-}
+});
 
-for (let element of popupElements) {
+popupElements.forEach((element) => {
   element
     .querySelector("button.popup__close")
     .addEventListener("click", closeModalWithClick);
   element.addEventListener("click", closeModalWithOverlayClick);
-}
-document.addEventListener("keydown", closeModalWithEsc);
+});
+
 
 profileEditButton.addEventListener("click", () => {
   profileForm.name.value = profileTitle.textContent;
