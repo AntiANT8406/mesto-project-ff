@@ -1,7 +1,9 @@
 .card__image {
   inline-size: 100%;
   object-fit: cover;
-  aspect-ratio: 1/1;
+  block-size: 282px;
+  /* aspect-ratio: 1/1; */
+  display: block;
 }
 
 .card__image:hover {
