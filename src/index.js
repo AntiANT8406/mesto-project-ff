@@ -8,6 +8,7 @@ import {
   closeModalWithEsc,
   closeModalWithOverlayClick,
 } from "./scripts/modal";
+import { makeAuthorizedRequest } from "./scripts/api.js";
 
 const cardTemplate = document.querySelector("#card-template").content;
 const profileElement = document.querySelector(".profile");
@@ -32,6 +33,7 @@ function zoomCard(name, link) {
   cardZoomModal.querySelector(".popup__caption").textContent = name;
   openModal(cardZoomModal);
 }
+
 
 initialCards.forEach((cardItems) => {
   const card = createCard(
@@ -80,4 +82,17 @@ addCardForm.addEventListener("submit", (evt) => {
   placesElement.prepend(card);
   addCardForm.reset();
   closeModal(cardAddModal);
+});
+
+makeAuthorizedRequest('cards').then(cardsData => {
+  cardsData.forEach((cardData) => {
+    const card = createCard(
+      cardData,
+      cardTemplate,
+      deleteCard,
+      likeCard,
+      zoomCard
+    );
+    placesElement.append(card);
+  })
 });
