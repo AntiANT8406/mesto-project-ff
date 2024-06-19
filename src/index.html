@@ -13,11 +13,7 @@
   <body class="page">
     <div class="page__content">
       <header class="header page__section">
-        <img
-          src="<%=require('./images/logo.svg')%>"
-          alt="Логотип проекта масто"
-          class="logo header__logo"
-        />
+        <img src="<%=require('./images/logo.svg')%>" alt="Логотип проекта масто" class="logo header__logo" />
       </header>
 
       <main class="content">
@@ -44,13 +40,7 @@
           <button type="button" class="popup__close"></button>
           <h3 class="popup__title">Редактировать профиль</h3>
           <form class="popup__form" name="edit-profile">
-            <input
-              type="text"
-              name="name"
-              class="popup__input popup__input_type_name"
-              placeholder="Имя"
-              required
-            />
+            <input type="text" name="name" class="popup__input popup__input_type_name" placeholder="Имя" required />
             <input
               type="text"
               name="description"
@@ -58,9 +48,7 @@
               placeholder="Занятие"
               required
             />
-            <button type="submit" class="button popup__button">
-              Сохранить
-            </button>
+            <button type="submit" class="button popup__button">Сохранить</button>
           </form>
         </div>
       </div>
@@ -83,9 +71,7 @@
               placeholder="Ссылка на картинку"
               required
             />
-            <button type="submit" class="button popup__button">
-              Сохранить
-            </button>
+            <button type="submit" class="button popup__button">Сохранить</button>
           </form>
         </div>
       </div>
@@ -100,43 +86,7 @@
 
     <template id="card-template">
       <li class="places__item card">
-
-<<<<<<< HEAD
-  <div class="popup popup_type_edit popup_is-animated">
-    <div class="popup__content">
-      <button type="button" class="popup__close"></button>
-      <h3 class="popup__title">Редактировать профиль</h3>
-      <form class="popup__form" name="edit-profile">
-        <input type="text" name="name" class="popup__input popup__input_type_name" placeholder="Имя" required>
-        <div class="popup__error">Здесь должна быть Ваша ошибка</div>
-        <input type="text" name="description" class="popup__input popup__input_type_description" placeholder="Занятие" required>
-        <button type="submit" class="button popup__button">Сохранить</button>
-      </form>
-    </div>
-  </div>
-  <div class="popup popup_type_new-card popup_is-animated">
-    <div class="popup__content">
-      <button type="button" class="popup__close"></button>
-      <h3 class="popup__title">Новое место</h3>
-      <form class="popup__form" name="new-place">
-        <input type="text" name="place-name" class="popup__input popup__input_type_card-name" placeholder="Название" required>
-        <input type="url" name="link" class="popup__input popup__input_type_url" placeholder="Ссылка на картинку" required>
-        <button type="submit" class="button popup__button">Сохранить</button>
-      </form>
-    </div>
-  </div>
-  <div class="popup popup_type_image popup_is-animated">
-    <div class="popup__content popup__content_content_image">
-      <button type="button" class="popup__close"></button>
-      <img src="" alt="" class="popup__image">
-      <p class="popup__caption"></p>
-    </div>
-  </div>
-</div>
-=======
-          <img class="card__image" src="" alt="" />
->>>>>>> 3788889109bd483aa84d05d731bdb823c24833cf
-
+        <img class="card__image" src="" alt="" />
         <button type="button" class="card__delete-button"></button>
         <div class="card__description">
           <h2 class="card__title"></h2>
