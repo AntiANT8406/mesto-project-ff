@@ -96,3 +96,6 @@ makeAuthorizedRequest('cards').then(cardsData => {
     placesElement.append(card);
   })
 });
+
+
+
