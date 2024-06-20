@@ -1,14 +1,9 @@
 import "./pages/index.css";
 import { initialCards } from "./scripts/cards.js";
 import { createCard, deleteCard, likeCard } from "./scripts/card";
-import {
-  openModal,
-  closeModal,
-  closeModalWithClick,
-  closeModalWithEsc,
-  closeModalWithOverlayClick,
-} from "./scripts/modal";
+import { openModal, closeModal, closeModalWithClick, closeModalWithOverlayClick } from "./scripts/modal";
 import { makeAuthorizedRequest } from "./scripts/api.js";
+import { enableValidation } from "./scripts/validation.js";
 
 const cardTemplate = document.querySelector("#card-template").content;
 const profileElement = document.querySelector(".profile");
@@ -18,9 +13,7 @@ const cardAddModal = document.querySelector(".popup_type_new-card");
 const cardZoomModal = document.querySelector(".popup_type_image");
 const profileEditButton = profileElement.querySelector(".profile__edit-button");
 const profileTitle = profileElement.querySelector(".profile__title");
-const profileDescription = profileElement.querySelector(
-  ".profile__description"
-);
+const profileDescription = profileElement.querySelector(".profile__description");
 const profileForm = document.forms["edit-profile"];
 const popupElements = document.querySelectorAll(".popup");
 const addCardButton = profileElement.querySelector(".profile__add-button");
@@ -34,25 +27,15 @@ function zoomCard(name, link) {
   openModal(cardZoomModal);
 }
 
-
 initialCards.forEach((cardItems) => {
-  const card = createCard(
-    cardItems,
-    cardTemplate,
-    deleteCard,
-    likeCard,
-    zoomCard
-  );
+  const card = createCard(cardItems, cardTemplate, deleteCard, likeCard, zoomCard);
   placesElement.append(card);
 });
 
 popupElements.forEach((element) => {
-  element
-    .querySelector("button.popup__close")
-    .addEventListener("click", closeModalWithClick);
+  element.querySelector("button.popup__close").addEventListener("click", closeModalWithClick);
   element.addEventListener("click", closeModalWithOverlayClick);
 });
-
 
 profileEditButton.addEventListener("click", () => {
   profileForm.name.value = profileTitle.textContent;
@@ -84,18 +67,18 @@ addCardForm.addEventListener("submit", (evt) => {
   closeModal(cardAddModal);
 });
 
-makeAuthorizedRequest('cards').then(cardsData => {
+makeAuthorizedRequest("cards").then((cardsData) => {
   cardsData.forEach((cardData) => {
-    const card = createCard(
-      cardData,
-      cardTemplate,
-      deleteCard,
-      likeCard,
-      zoomCard
-    );
+    const card = createCard(cardData, cardTemplate, deleteCard, likeCard, zoomCard);
     placesElement.append(card);
-  })
+  });
 });
 
-
-
+enableValidation({
+  formSelector: '.popup__form',
+  inputSelector: '.popup__input',
+  submitButtonSelector: '.popup__button',
+  inactiveButtonClass: 'popup__button_disabled',
+  inputErrorClass: 'popup__input_type_error',
+  errorClass: 'popup__error_visible'
+}); 

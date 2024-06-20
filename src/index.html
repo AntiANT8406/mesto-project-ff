@@ -43,23 +43,25 @@
             <input
               type="text"
               name="name"
+              id="profile-name"
               class="popup__input popup__input_type_name"
               placeholder="Имя"
               minlength="2"
               maxlength="40"
               required
             />
-            <div class="popup__input_type_error popup__error_visible">Разрешены только латинские, кириллические буквы, знаки дефиса и пробелы</div>
+            <div class="popup__error profile-name-error"></div>
             <input
               type="text"
               name="description"
+              id="profile-description"
               class="popup__input popup__input_type_description"
               placeholder="Занятие"
               minlength="2"
               maxlength="200"
               required
             />
-            <div class="popup__input_type_error">Здесь будет ошибка</div>
+            <div class="popup__error profile-description-error"></div>
             <button type="submit" class="button popup__button">Сохранить</button>
           </form>
         </div>

@@ -1,0 +1,7 @@
+.popup__error {
+    font-family: "Inter", sans-serif;
+    font-size: 12px;
+    color: #f00;
+    opacity: 0;
+  }
+  
