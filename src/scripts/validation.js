@@ -1,4 +1,9 @@
 const checkInputValidity = (formElement, inputElement, inputErrorClass, errorClass) => {
+  if (inputElement.validity.patternMismatch) {
+    inputElement.setCustomValidity(inputElement.dataset.errorMessage);
+  } else {
+    inputElement.setCustomValidity("");
+  }
   if (!inputElement.validity.valid) {
     showInputError(formElement, inputElement, inputElement.validationMessage, inputErrorClass, errorClass);
   } else {
@@ -72,5 +77,15 @@ export const enableValidation = ({
       inputErrorClass,
       errorClass
     );
+  });
+};
+
+export const clearValidation = (formElement, validationConfig) => {
+  const inputElements = Array.from(formElement.querySelectorAll(`.${validationConfig.inputErrorClass}`));
+  const errorElements = Array.from(formElement.querySelectorAll(`.${validationConfig.errorClass}`));
+  inputElements.forEach((element) => element.classList.remove(validationConfig.inputErrorClass));
+  errorElements.forEach((element) => {
+    element.textContent = "";
+    element.classList.remove(validationConfig.errorClass);
   });
 };
