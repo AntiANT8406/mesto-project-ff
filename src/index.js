@@ -1,8 +1,7 @@
 import "./pages/index.css";
-import { initialCards } from "./scripts/cards.js";
 import { createCard, deleteCard, likeCard } from "./scripts/card";
 import { openModal, closeModal, closeModalWithClick, closeModalWithOverlayClick } from "./scripts/modal";
-import { makeAuthorizedRequest } from "./scripts/api.js";
+import { getRequest, patchRequest } from "./scripts/api.js";
 import { enableValidation, clearValidation } from "./scripts/validation.js";
 
 const validationConfig = {
@@ -43,6 +42,11 @@ function updateProfileInDOM({ name, about, avatar }) {
   profileImage.src = avatar;
 }
 
+function addCardToDOM(cardData) {
+  const card = createCard(cardData, cardTemplate, deleteCard, likeCard, zoomCard);
+  placesElement.append(card);
+}
+
 popupElements.forEach((element) => {
   element.querySelector("button.popup__close").addEventListener("click", closeModalWithClick);
   element.addEventListener("click", closeModalWithOverlayClick);
@@ -57,8 +61,12 @@ profileEditButton.addEventListener("click", () => {
 
 profileForm.addEventListener("submit", (evt) => {
   evt.preventDefault();
-  profileTitle.textContent = profileForm.name.value;
-  profileDescription.textContent = profileForm.description.value;
+  const body = {name: profileForm.name.value, about: profileForm.description.value};
+  patchRequest('users/me', body)
+  .then((profileData) => {
+    updateProfileInDOM(profileData)
+  })
+  .catch(error => console.log(`Ошибка: ${error}`))
   closeModal(profileModal);
 });
 
@@ -67,6 +75,7 @@ addCardButton.addEventListener("click", () => {
   clearValidation(addCardForm, validationConfig);
   openModal(cardAddModal);
 });
+
 addCardForm.addEventListener("submit", (evt) => {
   evt.preventDefault();
   const card = createCard(
@@ -82,15 +91,13 @@ addCardForm.addEventListener("submit", (evt) => {
   closeModal(cardAddModal);
 });
 
-makeAuthorizedRequest("users/me").then((data) => {
-  updateProfileInDOM(data);
-  console.log(data);
-});
+const userPromise = getRequest("users/me");
+const cardsPromise = getRequest("cards");
 
-makeAuthorizedRequest("cards").then((cardsData) => {
+Promise.all([userPromise, cardsPromise]).then(([userData, cardsData]) => {
+  updateProfileInDOM(userData);
   cardsData.forEach((cardData) => {
-    const card = createCard(cardData, cardTemplate, deleteCard, likeCard, zoomCard);
-    placesElement.append(card);
+    addCardToDOM(cardData);
   });
 });
 

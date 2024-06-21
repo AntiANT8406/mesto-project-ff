@@ -24,8 +24,3 @@ export function closeModalWithEsc(evt) {
     closeModal(elementOpened);
   }
 }
-
-// export function clearModal(modalElement) {
-//   const inputElements = Array.from(modalElement.querySelectorAll('input'));
-//   inputElements.forEach(t)
-// }
