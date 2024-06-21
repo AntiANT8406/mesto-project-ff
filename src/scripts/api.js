@@ -32,3 +32,19 @@ export function patchRequest(url, bodyData) {
     return Promise.reject(response.status);
   });
 }
+
+export function postRequest(url, bodyData) {
+    return fetch(config.baseUrl + config.cohort + url, {
+      method: "POST",
+      headers: {
+        authorization: config.token,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(bodyData),
+    }).then((response) => {
+      if (response.ok) {
+        return response.json();
+      }
+      return Promise.reject(response.status);
+    });
+  }

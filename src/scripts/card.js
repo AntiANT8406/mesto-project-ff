@@ -7,14 +7,8 @@ export function likeCard(event) {
   event.target.classList.toggle("card__like-button_is-active");
 }
 
-export function createCard(
-  { name, link },
-  cardTemplate,
-  deleteFunction,
-  likeFunction,
-  zoomFunction
-) {
-  const currentCard = cardTemplate.querySelector(".card").cloneNode(true);
+export function createCard({ name, link }, deleteFunction, likeFunction, zoomFunction) {
+  const currentCard = document.querySelector("#card-template").content.querySelector(".card").cloneNode(true);
   const cardImage = currentCard.querySelector(".card__image");
   cardImage.src = link;
   cardImage.alt = "Фотография " + name;

@@ -1,7 +1,7 @@
 import "./pages/index.css";
 import { createCard, deleteCard, likeCard } from "./scripts/card";
 import { openModal, closeModal, closeModalWithClick, closeModalWithOverlayClick } from "./scripts/modal";
-import { getRequest, patchRequest } from "./scripts/api.js";
+import { getRequest, patchRequest, postRequest } from "./scripts/api.js";
 import { enableValidation, clearValidation } from "./scripts/validation.js";
 
 const validationConfig = {
@@ -13,7 +13,6 @@ const validationConfig = {
   errorClass: "popup__error_visible",
 };
 
-const cardTemplate = document.querySelector("#card-template").content;
 const profileElement = document.querySelector(".profile");
 const placesElement = document.querySelector(".places__list");
 const profileModal = document.querySelector(".popup_type_edit");
@@ -43,7 +42,7 @@ function updateProfileInDOM({ name, about, avatar }) {
 }
 
 function addCardToDOM(cardData) {
-  const card = createCard(cardData, cardTemplate, deleteCard, likeCard, zoomCard);
+  const card = createCard(cardData, deleteCard, likeCard, zoomCard);
   placesElement.append(card);
 }
 
@@ -61,12 +60,12 @@ profileEditButton.addEventListener("click", () => {
 
 profileForm.addEventListener("submit", (evt) => {
   evt.preventDefault();
-  const body = {name: profileForm.name.value, about: profileForm.description.value};
-  patchRequest('users/me', body)
-  .then((profileData) => {
-    updateProfileInDOM(profileData)
-  })
-  .catch(error => console.log(`Ошибка: ${error}`))
+  const body = { name: profileForm.name.value, about: profileForm.description.value };
+  patchRequest("users/me", body)
+    .then((profileData) => {
+      updateProfileInDOM(profileData);
+    })
+    .catch((error) => console.log(`Ошибка: ${error}`));
   closeModal(profileModal);
 });
 
@@ -78,17 +77,14 @@ addCardButton.addEventListener("click", () => {
 
 addCardForm.addEventListener("submit", (evt) => {
   evt.preventDefault();
-  const card = createCard(
-    { name: addCardForm["place-name"].value, link: addCardForm["link"].value },
-    cardTemplate,
-    deleteCard,
-    likeCard,
-    zoomCard
-  );
-  placesElement.prepend(card);
-  addCardForm.reset();
-  clearValidation(addCardForm, validationConfig);
-  closeModal(cardAddModal);
+  const body = { name: addCardForm["place-name"].value, link: addCardForm["link"].value };
+  postRequest("cards", body).then((cardData) => {
+    addCardToDOM(cardData);
+    addCardForm.reset();
+    clearValidation(addCardForm, validationConfig);
+    closeModal(cardAddModal);
+  })
+  .catch((error) => console.log(`Ошибка: ${error}`));
 });
 
 const userPromise = getRequest("users/me");
