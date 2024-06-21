@@ -78,6 +78,7 @@ addCardForm.addEventListener("submit", (evt) => {
   );
   placesElement.prepend(card);
   addCardForm.reset();
+  clearValidation(addCardForm, validationConfig);
   closeModal(cardAddModal);
 });
 
