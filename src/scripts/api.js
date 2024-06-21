@@ -42,7 +42,7 @@ export function postRequest(url, bodyData) {
     },
     body: JSON.stringify(bodyData),
   }).then((response) => {
-    if (response.status == 201) {
+    if (response.ok) {
       return response.json();
     }
     return Promise.reject(response.status);
@@ -56,7 +56,7 @@ export function deleteRequest(url, cardId) {
       authorization: config.token,
     },
   }).then((response) => {
-    if (response.status == 204) {
+    if (response.ok) {
       return response.json();
     }
     return Promise.reject(response.status);

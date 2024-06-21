@@ -1,5 +1,5 @@
 import "./pages/index.css";
-import { createCard, deleteCard, likeCard } from "./scripts/card";
+import { createCard, likeCard } from "./scripts/card";
 import { openModal, closeModal, closeModalWithClick, closeModalWithOverlayClick } from "./scripts/modal";
 import { deleteRequest, getRequest, patchRequest, postRequest } from "./scripts/api.js";
 import { enableValidation, clearValidation } from "./scripts/validation.js";
@@ -42,10 +42,10 @@ function updateProfileInDOM({ name, about, avatar }) {
 }
 
 function addCardToDOM(cardData, userId) {
-  const card = createCard(cardData, deleteCard, likeCard, zoomCard);
-  if (userId === cardData.owner._id) {
+  const card = createCard(cardData, likeCard, zoomCard);
+  if (userId == cardData.owner._id) {
     const cardDeleteButton = card.querySelector(".card__delete-button");
-    cardDeleteButton.classList.remove(".card__delete-button_disabled");
+    cardDeleteButton.classList.remove("card__delete-button_disabled");
     cardDeleteButton.addEventListener("click", (evt) => {
       deleteRequest('cards', cardData._id)
       .then(() => card.remove())
