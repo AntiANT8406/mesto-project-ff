@@ -42,7 +42,21 @@ export function postRequest(url, bodyData) {
     },
     body: JSON.stringify(bodyData),
   }).then((response) => {
-    if (response.ok) {
+    if (response.status == 201) {
+      return response.json();
+    }
+    return Promise.reject(response.status);
+  });
+}
+
+export function deleteRequest(url, cardId) {
+  return fetch(config.baseUrl + config.cohort + url + "/" + cardId, {
+    method: "DELETE",
+    headers: {
+      authorization: config.token,
+    },
+  }).then((response) => {
+    if (response.status == 204) {
       return response.json();
     }
     return Promise.reject(response.status);

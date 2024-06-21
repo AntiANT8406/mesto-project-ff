@@ -1,7 +1,7 @@
 import "./pages/index.css";
 import { createCard, deleteCard, likeCard } from "./scripts/card";
 import { openModal, closeModal, closeModalWithClick, closeModalWithOverlayClick } from "./scripts/modal";
-import { getRequest, patchRequest, postRequest } from "./scripts/api.js";
+import { deleteRequest, getRequest, patchRequest, postRequest } from "./scripts/api.js";
 import { enableValidation, clearValidation } from "./scripts/validation.js";
 
 const validationConfig = {
@@ -41,8 +41,17 @@ function updateProfileInDOM({ name, about, avatar }) {
   profileImage.src = avatar;
 }
 
-function addCardToDOM(cardData) {
+function addCardToDOM(cardData, userId) {
   const card = createCard(cardData, deleteCard, likeCard, zoomCard);
+  if (userId === cardData.owner._id) {
+    const cardDeleteButton = card.querySelector(".card__delete-button");
+    cardDeleteButton.classList.remove(".card__delete-button_disabled");
+    cardDeleteButton.addEventListener("click", (evt) => {
+      deleteRequest('cards', cardData._id)
+      .then(() => card.remove())
+      .catch(error => console.log(error))
+    });
+  }
   placesElement.append(card);
 }
 
@@ -78,13 +87,14 @@ addCardButton.addEventListener("click", () => {
 addCardForm.addEventListener("submit", (evt) => {
   evt.preventDefault();
   const body = { name: addCardForm["place-name"].value, link: addCardForm["link"].value };
-  postRequest("cards", body).then((cardData) => {
-    addCardToDOM(cardData);
-    addCardForm.reset();
-    clearValidation(addCardForm, validationConfig);
-    closeModal(cardAddModal);
-  })
-  .catch((error) => console.log(`Ошибка: ${error}`));
+  postRequest("cards", body)
+    .then((cardData) => {
+      addCardToDOM(cardData, cardData.owner._id);
+      addCardForm.reset();
+      clearValidation(addCardForm, validationConfig);
+      closeModal(cardAddModal);
+    })
+    .catch((error) => console.log(`Ошибка: ${error}`));
 });
 
 const userPromise = getRequest("users/me");
@@ -93,7 +103,7 @@ const cardsPromise = getRequest("cards");
 Promise.all([userPromise, cardsPromise]).then(([userData, cardsData]) => {
   updateProfileInDOM(userData);
   cardsData.forEach((cardData) => {
-    addCardToDOM(cardData);
+    addCardToDOM(cardData, userData._id);
   });
 });
 
