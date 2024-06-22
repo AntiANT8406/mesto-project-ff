@@ -52,6 +52,7 @@ function addCardToDOM(cardData, userId) {
       .catch(error => console.log(error))
     });
   }
+  
   placesElement.append(card);
 }
 

@@ -17,6 +17,22 @@ export function getRequest(url) {
   });
 }
 
+export function postRequest(url, bodyData) {
+  return fetch(config.baseUrl + config.cohort + url, {
+    method: "POST",
+    headers: {
+      authorization: config.token,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(bodyData),
+  }).then((response) => {
+    if (response.ok) {
+      return response.json();
+    }
+    return Promise.reject(response.status);
+  });
+}
+
 export function patchRequest(url, bodyData) {
   return fetch(config.baseUrl + config.cohort + url, {
     method: "PATCH",
@@ -33,12 +49,11 @@ export function patchRequest(url, bodyData) {
   });
 }
 
-export function postRequest(url, bodyData) {
-  return fetch(config.baseUrl + config.cohort + url, {
-    method: "POST",
+export function putRequest(url, bodyData, cardId) {
+  return fetch(config.baseUrl + config.cohort + url + "/" + cardId, {
+    method: "PUT",
     headers: {
       authorization: config.token,
-      "Content-Type": "application/json",
     },
     body: JSON.stringify(bodyData),
   }).then((response) => {
