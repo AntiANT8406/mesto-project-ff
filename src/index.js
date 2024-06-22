@@ -1,7 +1,7 @@
 import "./pages/index.css";
 import { createCard, likeCard } from "./scripts/card";
 import { openModal, closeModal, closeModalWithClick, closeModalWithOverlayClick } from "./scripts/modal";
-import { deleteRequest, getRequest, patchRequest, postRequest } from "./scripts/api.js";
+import { deleteRequest, getRequest, patchRequest, postRequest, putRequest } from "./scripts/api.js";
 import { enableValidation, clearValidation } from "./scripts/validation.js";
 
 const validationConfig = {
@@ -41,18 +41,35 @@ function updateProfileInDOM({ name, about, avatar }) {
   profileImage.src = avatar;
 }
 
-function addCardToDOM(cardData, userId) {
+function addCardToDOM(cardData, userData) {
   const card = createCard(cardData, likeCard, zoomCard);
-  if (userId == cardData.owner._id) {
+  if (userData == cardData.owner) {
     const cardDeleteButton = card.querySelector(".card__delete-button");
     cardDeleteButton.classList.remove("card__delete-button_disabled");
     cardDeleteButton.addEventListener("click", (evt) => {
-      deleteRequest('cards', cardData._id)
-      .then(() => card.remove())
-      .catch(error => console.log(error))
+      deleteRequest("cards", cardData._id)
+        .then(() => card.remove())
+        .catch((error) => console.log(`Ошибка: ${error}`));
     });
   }
-  
+  const cardLikeButton =card.querySelector(".card__like-button");
+  console.log(cardData.likes)
+  console.log(userData)
+  console.log(Array.from(cardData.likes).includes(userData))
+  if (cardData.likes.includes(userData)) {
+    cardLikeButton.classList.add("card__like-button_is-active");
+  }
+  cardLikeButton.addEventListener("click", () => {
+    if (cardLikeButton.classList.contains("card__like-button_is-active")) {
+      deleteRequest("cards/likes", cardData._id)
+        .then(() => cardLikeButton.classList.remove("card__like-button_is-active"))
+        .catch((error) => console.log(`Ошибка: ${error}`));
+    } else {
+      putRequest("cards/likes", {}, cardData._id)
+        .then(() => cardLikeButton.classList.add("card__like-button_is-active"))
+        .catch((error) => console.log(`Ошибка: ${error}`));
+    }
+  });
   placesElement.append(card);
 }
 
@@ -104,7 +121,7 @@ const cardsPromise = getRequest("cards");
 Promise.all([userPromise, cardsPromise]).then(([userData, cardsData]) => {
   updateProfileInDOM(userData);
   cardsData.forEach((cardData) => {
-    addCardToDOM(cardData, userData._id);
+    addCardToDOM(cardData, userData);
   });
 });
 

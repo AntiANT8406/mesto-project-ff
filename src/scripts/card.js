@@ -11,8 +11,6 @@ export function createCard({ name, link, likes}, likeFunction, zoomFunction) {
   cardTitle.textContent = name;
   const cardLikesCount = currentCard.querySelector(".card__likes-count");
   cardLikesCount.textContent = likes.length;
-  const cardLikeButton = currentCard.querySelector(".card__like-button");
-  cardLikeButton.addEventListener("click", likeFunction);
   cardImage.addEventListener("click", () => {
     zoomFunction(name, link);
   });
