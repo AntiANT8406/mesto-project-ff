@@ -52,7 +52,7 @@ function addCardToDOM(cardData, userId) {
         .catch((error) => console.log(`Ошибка: ${error}`));
     });
   }
-  const cardLikesCount = currentCard.querySelector(".card__likes-count");
+  const cardLikesCount = card.querySelector(".card__likes-count");
   cardLikesCount.textContent = cardData.likes.length;
   const cardLikeButton =card.querySelector(".card__like-button");
   if (cardData.likes.some((user) => user._id === userId)) {
@@ -61,11 +61,17 @@ function addCardToDOM(cardData, userId) {
   cardLikeButton.addEventListener("click", () => {
     if (cardLikeButton.classList.contains("card__like-button_is-active")) {
       deleteRequest("cards/likes", cardData._id)
-        .then(() => cardLikeButton.classList.remove("card__like-button_is-active"))
+        .then((cardData) => {
+          cardLikeButton.classList.remove("card__like-button_is-active");
+          cardLikesCount.textContent = cardData.likes.length;
+        })
         .catch((error) => console.log(`Ошибка: ${error}`));
     } else {
       putRequest("cards/likes", {}, cardData._id)
-        .then(() => cardLikeButton.classList.add("card__like-button_is-active"))
+        .then((cardData) => {
+          cardLikeButton.classList.add("card__like-button_is-active");
+          cardLikesCount.textContent = cardData.likes.length;
+        })
         .catch((error) => console.log(`Ошибка: ${error}`));
     }
   });
