@@ -41,9 +41,9 @@ function updateProfileInDOM({ name, about, avatar }) {
   profileImage.src = avatar;
 }
 
-function addCardToDOM(cardData, userData) {
+function addCardToDOM(cardData, userId) {
   const card = createCard(cardData, likeCard, zoomCard);
-  if (userData == cardData.owner) {
+  if (userId == cardData.owner._id) {
     const cardDeleteButton = card.querySelector(".card__delete-button");
     cardDeleteButton.classList.remove("card__delete-button_disabled");
     cardDeleteButton.addEventListener("click", (evt) => {
@@ -52,11 +52,10 @@ function addCardToDOM(cardData, userData) {
         .catch((error) => console.log(`Ошибка: ${error}`));
     });
   }
+  const cardLikesCount = currentCard.querySelector(".card__likes-count");
+  cardLikesCount.textContent = cardData.likes.length;
   const cardLikeButton =card.querySelector(".card__like-button");
-  console.log(cardData.likes)
-  console.log(userData)
-  console.log(Array.from(cardData.likes).includes(userData))
-  if (cardData.likes.includes(userData)) {
+  if (cardData.likes.some((user) => user._id === userId)) {
     cardLikeButton.classList.add("card__like-button_is-active");
   }
   cardLikeButton.addEventListener("click", () => {
@@ -121,7 +120,7 @@ const cardsPromise = getRequest("cards");
 Promise.all([userPromise, cardsPromise]).then(([userData, cardsData]) => {
   updateProfileInDOM(userData);
   cardsData.forEach((cardData) => {
-    addCardToDOM(cardData, userData);
+    addCardToDOM(cardData, userData._id);
   });
 });
 
