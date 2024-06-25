@@ -77,3 +77,7 @@ export function deleteRequest(url, cardId) {
     return Promise.reject(response.status);
   });
 }
+
+export function logError(error) {
+  console.log(`Ошибка: ${error}`);
+}
