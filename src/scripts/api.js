@@ -4,80 +4,46 @@ const config = {
   token: "8fcda09a-8f72-4dc5-aa90-849dbf4c62a2",
 };
 
-export function getRequest(url) {
-  return fetch(config.baseUrl + config.cohort + url, {
+function checkResponse(res) {
+  return res.ok ? res.json() : Promise.reject(`Ошибка: ${res.status}`);
+}
+
+export function makeRequest(url, method = "GET", body = null) {
+  const parameters = {
+    method: method,
     headers: {
       authorization: config.token,
+      ...(method !== "GET" ? { "Content-Type": "application/json" } : {}),
     },
-  }).then((response) => {
-    if (response.ok) {
-      return response.json();
-    }
-    return Promise.reject(response.status);
+    ...(body ? { body: JSON.stringify(body) } : {}),
+  };
+  return fetch(config.baseUrl + config.cohort + url, parameters).then(checkResponse);
+}
+
+export function getCards() {
+  makeRequest("cards").then((data) => {
+    return data;
   });
 }
 
-export function postRequest(url, bodyData) {
-  return fetch(config.baseUrl + config.cohort + url, {
-    method: "POST",
-    headers: {
-      authorization: config.token,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(bodyData),
-  }).then((response) => {
-    if (response.ok) {
-      return response.json();
-    }
-    return Promise.reject(response.status);
+export function getUserInfo() {
+  makeRequest("users/me").then((data) => {
+    return data;
   });
 }
 
-export function patchRequest(url, bodyData) {
-  return fetch(config.baseUrl + config.cohort + url, {
-    method: "PATCH",
-    headers: {
-      authorization: config.token,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(bodyData),
-  }).then((response) => {
-    if (response.ok) {
-      return response.json();
-    }
-    return Promise.reject(response.status);
-  });
+export function deleteLike(cardId) {
+  return makeRequest(`cards/${cardId}/likes`, "DELETE");
 }
 
-export function putRequest(url, bodyData, cardId) {
-  return fetch(config.baseUrl + config.cohort + url + "/" + cardId, {
-    method: "PUT",
-    headers: {
-      authorization: config.token,
-    },
-    body: JSON.stringify(bodyData),
-  }).then((response) => {
-    if (response.ok) {
-      return response.json();
-    }
-    return Promise.reject(response.status);
-  });
+export function putLike(cardId) {
+  return makeRequest(`cards/${cardId}/likes`, "PUT");
 }
 
-export function deleteRequest(url, cardId) {
-  return fetch(config.baseUrl + config.cohort + url + "/" + cardId, {
-    method: "DELETE",
-    headers: {
-      authorization: config.token,
-    },
-  }).then((response) => {
-    if (response.ok) {
-      return response.json();
-    }
-    return Promise.reject(response.status);
-  });
+export function deleteCard(cardId) {
+  return makeRequest(`cards/${cardId}`, "DELETE");
 }
 
 export function logError(error) {
-  console.log(`Ошибка: ${error}`);
+  console.log(error);
 }

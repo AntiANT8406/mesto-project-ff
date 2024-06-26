@@ -1,7 +1,17 @@
 import "./pages/index.css";
 import { createCard, likeCard } from "./scripts/card";
 import { openModal, closeModal, closeModalWithClick, closeModalWithOverlayClick } from "./scripts/modal";
-import { deleteRequest, getRequest, patchRequest, postRequest, putRequest, logError } from "./scripts/api.js";
+import {
+  deleteRequest,
+  getRequest,
+  patchRequest,
+  postRequest,
+  putRequest,
+  logError,
+  makeRequest,
+  getCards,
+  getUserInfo,
+} from "./scripts/api.js";
 import { enableValidation, clearValidation } from "./scripts/validation.js";
 
 const validationConfig = {
@@ -72,42 +82,10 @@ const placesElement = document.querySelector(".places__list");
 const cardAddModal = document.querySelector(".popup_type_new-card");
 const cardZoomModal = document.querySelector(".popup_type_image");
 const addCardForm = document.forms["new-place"];
-const cardLikesCount = card.querySelector(".card__likes-count");
-const cardLikeButton = card.querySelector(".card__like-button");
 
-function addCardToDOM(cardData, userId) {
-  const card = createCard(cardData, likeCard, zoomCard);
-  if (userId == cardData.owner._id) {
-    const cardDeleteButton = card.querySelector(".card__delete-button");
-    cardDeleteButton.classList.remove("card__delete-button_disabled");
-    cardDeleteButton.addEventListener("click", (evt) => {
-      deleteRequest("cards", cardData._id)
-        .then(() => card.remove())
-        .catch(logError);
-    });
-  }
-  cardLikesCount.textContent = cardData.likes.length;
-  if (cardData.likes.some((user) => user._id === userId)) {
-    cardLikeButton.classList.add("card__like-button_is-active");
-  }
-  cardLikeButton.addEventListener("click", () => {
-    if (cardLikeButton.classList.contains("card__like-button_is-active")) {
-      deleteRequest("cards/likes", cardData._id)
-        .then((cardData) => {
-          cardLikeButton.classList.remove("card__like-button_is-active");
-          cardLikesCount.textContent = cardData.likes.length;
-        })
-        .catch(logError);
-    } else {
-      putRequest("cards/likes", {}, cardData._id)
-        .then((cardData) => {
-          cardLikeButton.classList.add("card__like-button_is-active");
-          cardLikesCount.textContent = cardData.likes.length;
-        })
-        .catch(logError);
-    }
-  });
-  placesElement.append(card);
+function addCardToDOM(cardData, userData) {
+  const card = createCard(cardData, userData, zoomCard);
+   placesElement.prepend(card);
 }
 
 function zoomCard(name, link) {
@@ -140,8 +118,8 @@ addCardForm.addEventListener("submit", (evt) => {
 // инициализация страницы
 
 const popupElements = document.querySelectorAll(".popup");
-const userPromise = getRequest("users/me");
-const cardsPromise = getRequest("cards");
+const userPromise = getUserInfo();
+const cardsPromise = getCards();
 
 popupElements.forEach((element) => {
   element.querySelector("button.popup__close").addEventListener("click", closeModalWithClick);
@@ -152,7 +130,7 @@ Promise.all([userPromise, cardsPromise])
   .then(([userData, cardsData]) => {
     updateProfileInDOM(userData);
     cardsData.forEach((cardData) => {
-      addCardToDOM(cardData, userData._id);
+      addCardToDOM(cardData, userData);
     });
   })
   .catch(logError);
