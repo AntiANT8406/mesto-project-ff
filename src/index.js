@@ -30,9 +30,13 @@ function updateProfileInDOM({ name, about, avatar }) {
 }
 
 profileForm.addEventListener("submit", (evt) => {
+  evt.preventDefault();
+  const currentSubmitButton = evt.currentTarget.querySelector(".popup__button");
+  currentSubmitButton.textContent = "Сохранение...";
   updateUserInfo({ name: profileForm.name.value, about: profileForm.description.value })
     .then((profileData) => updateProfileInDOM(profileData))
-    .catch(logError);
+    .catch(logError)
+    .finally(() => currentSubmitButton.textContent = "Сохранить");
   closeModal(profileModal);
 });
 
@@ -58,12 +62,15 @@ profileImageContainer.addEventListener("click", () => {
 
 avatarForm.addEventListener("submit", (evt) => {
   evt.preventDefault();
+  const currentSubmitButton = evt.currentTarget.querySelector(".popup__button");
+  currentSubmitButton.textContent = "Сохранение...";
   updateAvatar({ avatar: avatarForm["avatar-link"].value })
     .then((userData) => {
       updateProfileInDOM(userData);
       closeModal(avatarModal);
     })
-    .catch(logError);
+    .catch(logError)
+    .finally(() => currentSubmitButton.textContent = "Сохранить");
 });
 
 // секция работы с картами
@@ -94,6 +101,8 @@ addCardButton.addEventListener("click", () => {
 
 addCardForm.addEventListener("submit", (evt) => {
   evt.preventDefault();
+  const currentSubmitButton = evt.currentTarget.querySelector(".popup__button");
+  currentSubmitButton.textContent = "Сохранение...";
   createCard({ name: addCardForm["place-name"].value, link: addCardForm["link"].value })
     .then((cardData) => {
       addCardToDOM(cardData, cardData.owner);
@@ -101,7 +110,8 @@ addCardForm.addEventListener("submit", (evt) => {
       clearValidation(addCardForm, validationConfig);
       closeModal(cardAddModal);
     })
-    .catch(logError);
+    .catch(logError)
+    .finally(() => currentSubmitButton.textContent = "Сохранить");
 });
 
 // инициализация страницы
