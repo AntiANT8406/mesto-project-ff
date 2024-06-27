@@ -1,17 +1,7 @@
 import "./pages/index.css";
-import { createCard, likeCard } from "./scripts/card";
+import { createCardElement } from "./scripts/card";
 import { openModal, closeModal, closeModalWithClick, closeModalWithOverlayClick } from "./scripts/modal";
-import {
-  deleteRequest,
-  getRequest,
-  patchRequest,
-  postRequest,
-  putRequest,
-  logError,
-  makeRequest,
-  getCards,
-  getUserInfo,
-} from "./scripts/api.js";
+import { logError, getCards, getUserInfo, createCard, updateAvatar } from "./scripts/api.js";
 import { enableValidation, clearValidation } from "./scripts/validation.js";
 
 const validationConfig = {
@@ -40,7 +30,7 @@ function updateProfileInDOM({ name, about, avatar }) {
 }
 
 profileForm.addEventListener("submit", (evt) => {
-  patchRequest("users/me", { name: profileForm.name.value, about: profileForm.description.value })
+  updateUserInfo({ name: profileForm.name.value, about: profileForm.description.value })
     .then((profileData) => updateProfileInDOM(profileData))
     .catch(logError);
   closeModal(profileModal);
@@ -68,7 +58,7 @@ profileImageContainer.addEventListener("click", () => {
 
 avatarForm.addEventListener("submit", (evt) => {
   evt.preventDefault();
-  patchRequest("users/me/avatar", { avatar: avatarForm["avatar-link"].value })
+  updateAvatar({ avatar: avatarForm["avatar-link"].value })
     .then((userData) => {
       updateProfileInDOM(userData);
       closeModal(avatarModal);
@@ -84,8 +74,8 @@ const cardZoomModal = document.querySelector(".popup_type_image");
 const addCardForm = document.forms["new-place"];
 
 function addCardToDOM(cardData, userData) {
-  const card = createCard(cardData, userData, zoomCard);
-   placesElement.prepend(card);
+  const card = createCardElement(cardData, userData, zoomCard);
+  placesElement.prepend(card);
 }
 
 function zoomCard(name, link) {
@@ -104,10 +94,9 @@ addCardButton.addEventListener("click", () => {
 
 addCardForm.addEventListener("submit", (evt) => {
   evt.preventDefault();
-  const body = { name: addCardForm["place-name"].value, link: addCardForm["link"].value };
-  postRequest("cards", body)
+  createCard({ name: addCardForm["place-name"].value, link: addCardForm["link"].value })
     .then((cardData) => {
-      addCardToDOM(cardData, cardData.owner._id);
+      addCardToDOM(cardData, cardData.owner);
       addCardForm.reset();
       clearValidation(addCardForm, validationConfig);
       closeModal(cardAddModal);
@@ -118,15 +107,12 @@ addCardForm.addEventListener("submit", (evt) => {
 // инициализация страницы
 
 const popupElements = document.querySelectorAll(".popup");
-const userPromise = getUserInfo();
-const cardsPromise = getCards();
-
 popupElements.forEach((element) => {
   element.querySelector("button.popup__close").addEventListener("click", closeModalWithClick);
   element.addEventListener("click", closeModalWithOverlayClick);
 });
 
-Promise.all([userPromise, cardsPromise])
+Promise.all([getUserInfo(), getCards()])
   .then(([userData, cardsData]) => {
     updateProfileInDOM(userData);
     cardsData.forEach((cardData) => {

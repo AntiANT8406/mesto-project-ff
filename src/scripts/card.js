@@ -1,10 +1,10 @@
-import { deleteCard, deleteLike, putLike } from "./api";
+import { deleteCard, deleteLike, putLike , logError} from "./api";
 
 export function likedByUser(cardData, userData) {
   return cardData.likes.some((user) => user._id === userData._id);
 }
 
-export function createCard(cardData, userData, zoomFunction) {
+export function createCardElement(cardData, userData, zoomFunction) {
   const currentCard = document.querySelector("#card-template").content.querySelector(".card").cloneNode(true);
   const cardImage = currentCard.querySelector(".card__image");
   cardImage.src = cardData.link;
@@ -19,6 +19,7 @@ export function createCard(cardData, userData, zoomFunction) {
 
   const cardLikeButton = currentCard.querySelector(".card__like-button");
   const cardLikesCount = currentCard.querySelector(".card__likes-count");
+  cardLikesCount.textContent = cardData.likes.length;
 
   if (likedByUser(cardData, userData)) {
     cardLikeButton.classList.add("card__like-button_is-active");
@@ -39,7 +40,7 @@ export function createCard(cardData, userData, zoomFunction) {
   } else {
     cardDeleteButton.addEventListener("click", () => {
       deleteCard(cardData._id)
-        .then(() => card.remove())
+        .then(() => currentCard.remove())
         .catch(logError);
     });
   }

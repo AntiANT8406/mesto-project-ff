@@ -20,16 +20,21 @@ export function makeRequest(url, method = "GET", body = null) {
   return fetch(config.baseUrl + config.cohort + url, parameters).then(checkResponse);
 }
 
-export function getCards() {
-  makeRequest("cards").then((data) => {
-    return data;
-  });
+export function getUserInfo() {
+  return makeRequest("users/me")
+  };
+
+
+export function updateUserInfo(data) {
+  return makeRequest("users/me", "PATCH", data);
 }
 
-export function getUserInfo() {
-  makeRequest("users/me").then((data) => {
-    return data;
-  });
+export function updateAvatar(data) {
+  return makeRequest("users/me/avatar", "PATCH", data);
+}
+
+export function getCards() {
+  return makeRequest("cards");
 }
 
 export function deleteLike(cardId) {
@@ -40,6 +45,9 @@ export function putLike(cardId) {
   return makeRequest(`cards/${cardId}/likes`, "PUT");
 }
 
+export function createCard(cardData) {
+  return makeRequest("cards", "POST", cardData);
+}
 export function deleteCard(cardId) {
   return makeRequest(`cards/${cardId}`, "DELETE");
 }
