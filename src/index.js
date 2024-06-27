@@ -36,7 +36,7 @@ profileForm.addEventListener("submit", (evt) => {
   updateUserInfo({ name: profileForm.name.value, about: profileForm.description.value })
     .then((profileData) => updateProfileInDOM(profileData))
     .catch(logError)
-    .finally(() => currentSubmitButton.textContent = "Сохранить");
+    .finally(() => (currentSubmitButton.textContent = "Сохранить"));
   closeModal(profileModal);
 });
 
@@ -70,7 +70,7 @@ avatarForm.addEventListener("submit", (evt) => {
       closeModal(avatarModal);
     })
     .catch(logError)
-    .finally(() => currentSubmitButton.textContent = "Сохранить");
+    .finally(() => (currentSubmitButton.textContent = "Сохранить"));
 });
 
 // секция работы с картами
@@ -111,7 +111,7 @@ addCardForm.addEventListener("submit", (evt) => {
       closeModal(cardAddModal);
     })
     .catch(logError)
-    .finally(() => currentSubmitButton.textContent = "Сохранить");
+    .finally(() => (currentSubmitButton.textContent = "Сохранить"));
 });
 
 // инициализация страницы
@@ -125,9 +125,11 @@ popupElements.forEach((element) => {
 Promise.all([getUserInfo(), getCards()])
   .then(([userData, cardsData]) => {
     updateProfileInDOM(userData);
-    cardsData.forEach((cardData) => {
-      addCardToDOM(cardData, userData);
-    });
+    Array.from(cardsData)
+      .reverse()
+      .forEach((cardData) => {
+        addCardToDOM(cardData, userData);
+      });
   })
   .catch(logError);
 
