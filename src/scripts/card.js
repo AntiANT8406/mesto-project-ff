@@ -1,6 +1,6 @@
-import { deleteCard, deleteLike, putLike , logError} from "./api";
+import { deleteCard, deleteLike, putLike, logError } from "./api";
 
-export function likedByUser(cardData, userData) {
+function likedByUser(cardData, userData) {
   return cardData.likes.some((user) => user._id === userData._id);
 }
 

@@ -1,7 +1,7 @@
 import "./pages/index.css";
 import { createCardElement } from "./scripts/card";
 import { openModal, closeModal, closeModalWithClick, closeModalWithOverlayClick } from "./scripts/modal";
-import { logError, getCards, getUserInfo, createCard, updateAvatar } from "./scripts/api.js";
+import { logError, getCards, getUserInfo, updateUserInfo, createCard, updateAvatar } from "./scripts/api.js";
 import { enableValidation, clearValidation } from "./scripts/validation.js";
 
 const validationConfig = {
@@ -22,6 +22,7 @@ const profileTitle = profileElement.querySelector(".profile__title");
 const profileDescription = profileElement.querySelector(".profile__description");
 const profileForm = document.forms["edit-profile"];
 const addCardButton = profileElement.querySelector(".profile__add-button");
+const profileModalSubmitButton = profileModal.querySelector(".popup__button");
 
 function updateProfileInDOM({ name, about, avatar }) {
   profileTitle.textContent = name;
@@ -31,19 +32,21 @@ function updateProfileInDOM({ name, about, avatar }) {
 
 profileForm.addEventListener("submit", (evt) => {
   evt.preventDefault();
-  const currentSubmitButton = evt.currentTarget.querySelector(".popup__button");
-  currentSubmitButton.textContent = "Сохранение...";
+  profileModalSubmitButton.textContent = "Сохранение...";
   updateUserInfo({ name: profileForm.name.value, about: profileForm.description.value })
-    .then((profileData) => updateProfileInDOM(profileData))
+    .then((profileData) => {
+      updateProfileInDOM(profileData);
+      closeModal(profileModal);
+    })
     .catch(logError)
-    .finally(() => (currentSubmitButton.textContent = "Сохранить"));
-  closeModal(profileModal);
+    .finally(() => (profileModalSubmitButton.textContent = "Сохранить"));
 });
 
 profileEditButton.addEventListener("click", () => {
   profileForm.name.value = profileTitle.textContent;
   profileForm.description.value = profileDescription.textContent;
   clearValidation(profileForm, validationConfig);
+  profileModalSubmitButton.classList.remove("popup__button_disabled");
   openModal(profileModal);
 });
 
@@ -53,24 +56,26 @@ const avatarModal = document.querySelector(".popup_type_avatar");
 const avatarForm = document.forms["avatar"];
 const profileImage = profileElement.querySelector(".profile__image");
 const profileImageContainer = profileElement.querySelector(".profile__image-container");
+const avatarModalSubmitButton = avatarModal.querySelector(".popup__button");
 
 profileImageContainer.addEventListener("click", () => {
   avatarForm.reset();
   clearValidation(avatarForm, validationConfig);
+  avatarModalSubmitButton.classList.add("popup__button_disabled");
   openModal(avatarModal);
 });
 
 avatarForm.addEventListener("submit", (evt) => {
   evt.preventDefault();
-  const currentSubmitButton = evt.currentTarget.querySelector(".popup__button");
-  currentSubmitButton.textContent = "Сохранение...";
+
+  avatarModalSubmitButton.textContent = "Сохранение...";
   updateAvatar({ avatar: avatarForm["avatar-link"].value })
     .then((userData) => {
       updateProfileInDOM(userData);
       closeModal(avatarModal);
     })
     .catch(logError)
-    .finally(() => (currentSubmitButton.textContent = "Сохранить"));
+    .finally(() => (avatarModalSubmitButton.textContent = "Сохранить"));
 });
 
 // секция работы с картами
@@ -79,6 +84,7 @@ const placesElement = document.querySelector(".places__list");
 const cardAddModal = document.querySelector(".popup_type_new-card");
 const cardZoomModal = document.querySelector(".popup_type_image");
 const addCardForm = document.forms["new-place"];
+const cardAddModalSubmitButton = cardAddModal.querySelector(".popup__button");
 
 function addCardToDOM(cardData, userData) {
   const card = createCardElement(cardData, userData, zoomCard);
@@ -96,13 +102,13 @@ function zoomCard(name, link) {
 addCardButton.addEventListener("click", () => {
   addCardForm.reset();
   clearValidation(addCardForm, validationConfig);
+  cardAddModalSubmitButton.classList.add("popup__button_disabled");
   openModal(cardAddModal);
 });
 
 addCardForm.addEventListener("submit", (evt) => {
   evt.preventDefault();
-  const currentSubmitButton = evt.currentTarget.querySelector(".popup__button");
-  currentSubmitButton.textContent = "Сохранение...";
+  cardAddModalSubmitButton.textContent = "Сохранение...";
   createCard({ name: addCardForm["place-name"].value, link: addCardForm["link"].value })
     .then((cardData) => {
       addCardToDOM(cardData, cardData.owner);
@@ -111,7 +117,7 @@ addCardForm.addEventListener("submit", (evt) => {
       closeModal(cardAddModal);
     })
     .catch(logError)
-    .finally(() => (currentSubmitButton.textContent = "Сохранить"));
+    .finally(() => (cardAddModalSubmitButton.textContent = "Сохранить"));
 });
 
 // инициализация страницы

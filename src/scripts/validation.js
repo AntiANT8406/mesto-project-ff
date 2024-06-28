@@ -50,7 +50,6 @@ function setEventListeners(
   formElement.addEventListener("submit", (evt) => evt.preventDefault());
   const inputList = Array.from(formElement.querySelectorAll(inputSelector));
   const buttonElement = formElement.querySelector(submitButtonSelector);
-  toggleButtonState(inputList, buttonElement, inactiveButtonClass);
   inputList.forEach((inputElement) => {
     inputElement.addEventListener("input", () => {
       checkInputValidity(formElement, inputElement, inputErrorClass, errorClass);
